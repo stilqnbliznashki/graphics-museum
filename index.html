@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="Разходете се из виртуалния музей на графичните файлови формати.">
+  <title>Музей на графичните формати</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/data.js"></script>
+  <script defer src="js/assets.js"></script>
+  <script defer src="js/camera.js"></script>
+  <script defer src="js/player.js"></script>
+  <script defer src="js/modal.js"></script>
+  <script defer src="js/exhibits.js"></script>
+  <script defer src="js/interactives.js"></script>
+  <script defer src="js/transitions.js"></script>
+  <script defer src="js/tour.js"></script>
+  <script defer src="js/scene.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/file-sizes.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" data-action="go-lobby" aria-label="Към фоайето на музея">
+      <span class="brand-mark" aria-hidden="true">М</span>
+      <span>Музей на графичните формати</span>
+    </a>
+    <div class="header-controls">
+      <label class="skip-control">
+        <span>Премини към зала</span>
+        <select id="hall-select" aria-label="Премини към зала">
+          <option value="lobby">Фоайе</option>
+          <option value="raster">Растерна зала</option>
+          <option value="vector">Векторна зала</option>
+          <option value="comparison">Зала за сравнения</option>
+        </select>
+      </label>
+      <button class="tour-button" id="tour-toggle" type="button">Автообиколка</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="game-heading">
+      <div>
+        <p class="eyebrow">Виртуален музей · свободна разходка</p>
+        <h1 id="scene-title">Фоайе</h1>
+      </div>
+      <p class="walk-instructions" id="walk-instructions">Движение: ← → или A / D <span>·</span> Разглеждане: E</p>
+    </div>
+
+    <section class="museum-frame" aria-label="Разходка из музея">
+      <div class="scene-viewport" id="scene-viewport" tabindex="0" role="application" aria-label="Музейна сцена. Използвайте стрелките или A и D за движение.">
+        <div class="scene-sky" aria-hidden="true"></div>
+        <div class="parallax-layer far-layer" aria-hidden="true"></div>
+        <div class="parallax-layer near-layer" aria-hidden="true"></div>
+        <div class="world-layer" id="world-layer"></div>
+        <div class="museum-floor" aria-hidden="true"></div>
+        <div class="player" id="player" aria-label="Посетител">
+          <div class="player-sprite">
+            <img class="sprite-sheet" alt="" draggable="false">
+            <span class="sprite-fallback" aria-hidden="true"><span class="sprite-head"></span><span class="sprite-body"></span><span class="sprite-leg sprite-leg--left"></span><span class="sprite-leg sprite-leg--right"></span><span class="sprite-label">ПОСЕТИТЕЛ</span></span>
+          </div>
+        </div>
+        <p class="interaction-prompt" id="interaction-prompt" aria-live="polite" hidden></p>
+        <p class="scene-message" id="scene-message" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="scene-footer">
+        <div class="map-progress" aria-label="Позиция в залата">
+          <span class="map-start" aria-hidden="true"></span>
+          <div class="map-track" id="map-track">
+            <span class="map-player" id="map-player" aria-hidden="true"></span>
+            <span class="map-marker map-marker--exhibit" data-map-exhibits aria-hidden="true"></span>
+            <span class="map-marker map-marker--door" data-map-doors aria-hidden="true"></span>
+          </div>
+          <span class="map-end" aria-hidden="true"></span>
+        </div>
+        <span class="map-caption" id="map-caption">Фоайе · вход</span>
+      </div>
+    </section>
+    <p class="keyboard-hint" id="keyboard-hint">Движете се с клавишите и приближете се до експонат или врата. На телефон използвайте бутоните за движение.</p>
+    <div class="touch-controls" aria-label="Бутони за движение">
+      <button type="button" class="touch-button" data-move="-1" aria-label="Движение наляво">←</button>
+      <button type="button" class="touch-button" data-move="1" aria-label="Движение надясно">→</button>
+      <button type="button" class="touch-button touch-button--interact" data-action="interact">Разгледай · E</button>
+    </div>
+  </main>
+
+  <dialog class="exhibit-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-topline">
+      <p class="eyebrow" data-dialog-type></p>
+      <button class="dialog-close" type="button" aria-label="Затвори прозореца">×</button>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-art" aria-hidden="true"></div>
+      <div class="dialog-copy">
+        <h2 id="dialog-title"></h2>
+        <p class="dialog-extension"></p>
+        <dl class="fact-list">
+          <div><dt>Година</dt><dd data-field="year"></dd></div>
+          <div><dt>Създател</dt><dd data-field="creator"></dd></div>
+          <div><dt>Компресия</dt><dd data-field="compression"></dd></div>
+          <div><dt>Прозрачност</dt><dd data-field="transparency"></dd></div>
+          <div><dt>Анимация</dt><dd data-field="animation"></dd></div>
+          <div><dt>Използва се за</dt><dd data-field="usedFor"></dd></div>
+        </dl>
+        <div class="pros-cons">
+          <div><h3>Предимства</h3><ul data-list="pros"></ul></div>
+          <div><h3>Недостатъци</h3><ul data-list="cons"></ul></div>
+        </div>
+        <p class="fun-fact"><strong>Любопитен факт:</strong> <span data-field="funFact"></span></p>
+        <p class="verify-note" hidden>Някои данни за този формат трябва да бъдат проверени.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="interactive-dialog" id="interactive-dialog" aria-labelledby="interactive-title">
+    <div class="interactive-panel-header">
+      <div>
+        <p class="eyebrow">Интерактивна експозиция</p>
+        <h2 id="interactive-title"></h2>
+      </div>
+      <button class="dialog-close interactive-close" type="button" aria-label="Затвори интерактивната експозиция">×</button>
+    </div>
+    <div class="interactive-panel-content" id="interactive-content"></div>
+  </dialog>
+</body>
+</html>
